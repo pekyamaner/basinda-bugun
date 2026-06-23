@@ -1,10 +1,10 @@
 # 🗞️ Basında Bugün - Haber Sitesi
 
-Türkiye'den en güncel haberler için Flask ve NewsAPI kullanan modern, responsive bir haber sitesi.
+Türkiye'den en güncel haberler için Flask ve **MediaStack API** kullanan modern, responsive bir haber sitesi.
 
 ## 🎯 Özellikler
 
-- ✅ **Real-time Haberler**: NewsAPI entegrasyonu ile Türkiye'deki son dakika haberler
+- ✅ **Real-time Haberler**: MediaStack API entegrasyonu ile Türkiye'deki son dakika haberler
 - 🎨 **Modern Tasarım**: Responsive grid layout ve smooth animations
 - 🔍 **Arama ve Filtreleme**: Başlığa göre haberler arasında hızlı arama
 - 📱 **Mobil Uyumlu**: Tüm cihazlarda perfect görüntü
@@ -48,10 +48,10 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-5. **NewsAPI Anahtarı Al**
-   - [newsapi.org](https://newsapi.org) adresine git
-   - Ücretsiz anahtar al
-   - `.env` dosyasındaki `NEWSAPI_KEY` değerini güncelle
+5. **MediaStack API Anahtarı**
+   - Zaten entegre edilmiş: `ec437a7b7d79b819ef753263eba87c2d`
+   - Veya [mediastack.com](https://mediastack.com) adresinden kendin alabilirsin
+   - `.env` dosyasındaki `MEDIASTACK_API_KEY` değerini güncelle
 
 6. **Uygulamayı çalıştır**
 ```bash
@@ -65,7 +65,7 @@ python app.py
 
 ```
 basinda-bugun/
-├── app.py                 # Flask ana uygulaması
+├── app.py                 # Flask ana uygulaması (MediaStack API)
 ├── requirements.txt       # Python bağımlılıkları
 ├── .env.example          # Ortam değişkenleri örneği
 ├── .env                  # Ortam değişkenleri (git'de yok)
@@ -75,6 +75,29 @@ basinda-bugun/
 └── static/
     ├── style.css         # Stil ve tasarım
     └── script.js         # İnteraktif özellikleri
+```
+
+## 📡 Kullanılan API: MediaStack
+
+**MediaStack** Türkiye ve 80+ ülkeden haberleri getiren güçlü bir haberler API'sidir.
+
+### API Özellikleri:
+- ✅ Türkiye haberleri
+- ✅ 80+ ülkeden haber kaynakları
+- ✅ Gerçek zamanlı güncelleme
+- ✅ Ücretsiz plan mevcut
+- ✅ Güvenilir ve hızlı
+
+### Örnek API Çağrısı:
+```python
+url = "http://api.mediastack.com/v1/news"
+params = {
+    "access_key": "YOUR_API_KEY",
+    "countries": "tr",
+    "limit": 20,
+    "sort": "published_desc"
+}
+response = requests.get(url, params=params)
 ```
 
 ## 🎨 Tasarım Özellikleri
@@ -91,17 +114,17 @@ basinda-bugun/
 
 ## 🔧 Özelleştirme
 
-### Haberler Kategorisini Değiştir
-`app.py` dosyasında URL'i değiştir:
+### API Parametrelerini Değiştir
+`app.py` dosyasında parametreleri düzenle:
 ```python
-# Şu anda: country=tr (Türkiye)
-url = f"https://newsapi.org/v2/top-headlines?country=tr&apiKey={API_KEY}"
-
-# Kategori eklemek için:
-url = f"https://newsapi.org/v2/top-headlines?country=tr&category=business&apiKey={API_KEY}"
+params = {
+    "access_key": MEDIASTACK_API_KEY,
+    "countries": "tr",           # Ülke kodu
+    "limit": 20,                 # Kaç haber alınacak
+    "sort": "published_desc",    # Sıralama (published_desc, popularity)
+    "keywords": "spor"           # İsteğe bağlı: anahtar kelime
+}
 ```
-
-**Mevcut Kategoriler**: business, entertainment, general, health, science, sports, technology
 
 ### Stil Değiştir
 `static/style.css` dosyasındaki CSS değişkenlerini edit et:
@@ -119,30 +142,32 @@ url = f"https://newsapi.org/v2/top-headlines?country=tr&category=business&apiKey
 - API anahtarı `.env` dosyasında saklanır
 - `.env` dosyası `.gitignore`'a eklendi (git'e yüklenmez)
 - HTML çıktısında XSS saldırısından korunma
+- Güvenli HTTP isteği (timeout ve error handling)
 
 ## 📦 Kullanılan Teknolojiler
 
 - **Backend**: Flask (Python)
 - **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
-- **API**: NewsAPI.org
+- **API**: MediaStack.com
 - **İkonlar**: Font Awesome 6.4.0
-- **Görseller**: Unsplash
+- **Görseller**: Unsplash & API
 
 ## 🐛 Sorun Giderme
 
-### "API Durumu: 401" Hatası
-- NewsAPI anahtarı yanlış veya geçersiz
+### "MediaStack API Hatası" 
+- API anahtarı yanlış veya geçersiz
 - `.env` dosyasındaki anahtarı kontrol et
-- [newsapi.org](https://newsapi.org) adresinden yeni anahtar al
+- [mediastack.com](https://mediastack.com) adresinden yeni anahtar al
 
 ### Haberler Yüklenmiyorsa
 - İnternet bağlantısını kontrol et
-- NewsAPI'nin website'i açık mı kontrol et
+- MediaStack'in website'i açık mı kontrol et
 - Tarayıcınızın konsol (F12) bölümünde hata mesajına bak
 
-### CORS Hatası
-- Frontend ve backend aynı domain'de çalışmalı
-- `localhost:5000`'de çalıştığından emin ol
+### Timeout Hatası
+- API'ye bağlanmada zaman aşımı
+- İnternet bağlantısını kontrol et
+- Birkaç saniye sonra tekrar deneyin
 
 ## 🚀 İleri Özellikler (Gelecek Güncellemeler)
 
@@ -154,6 +179,7 @@ url = f"https://newsapi.org/v2/top-headlines?country=tr&category=business&apiKey
 - [ ] Pagination (sayfalama)
 - [ ] Database entegrasyonu
 - [ ] Admin paneli
+- [ ] Dark mode switch
 
 ## 📝 Lisans
 
@@ -173,3 +199,5 @@ Sorularınız, önerileriniz veya hata bildirimleri için:
 ---
 
 **Keyifli kodlamalar!** 🎉
+
+**API Kaynağı:** [MediaStack.com](https://mediastack.com)
